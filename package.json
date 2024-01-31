@@ -1,0 +1,15 @@
+{
+  "name": "sihui",
+  "version": "1.0.0",
+  "description": "created by wangsihui",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sihui Wang",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.90.0",
+    "wepack-cli": "^0.0.1-security"
+  }
+}
