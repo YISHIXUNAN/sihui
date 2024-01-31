@@ -4,12 +4,15 @@
   "description": "created by wangsihui",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "author": "Sihui Wang",
   "license": "ISC",
   "devDependencies": {
+    "css-loader": "^6.10.0",
+    "style-loader": "^3.3.4",
     "webpack": "^5.90.0",
-    "wepack-cli": "^0.0.1-security"
+    "webpack-cli": "^5.1.4"
   }
 }
