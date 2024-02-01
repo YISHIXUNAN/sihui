@@ -1,5 +1,15 @@
+
+@font-face {
+    font-family: 'MyFont';
+    src: url(../assets/font/OpenSans-BoldItalic.ttf);
+}
+
+
 .hello{
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     background-color: pink;
+    color:#fff;
+    font-family: 'MyFont';
+    background-image: url(../assets/image/image.jpg);
 }
