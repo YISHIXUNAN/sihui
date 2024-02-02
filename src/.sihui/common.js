@@ -4,4 +4,4 @@ export default COMMON;
 
 
 const a = { b: { c: { d: 1 } } };
-console.log('common print', a.b.c)
+console.log('common print--', a.b.c)
