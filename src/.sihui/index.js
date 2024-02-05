@@ -16,6 +16,10 @@ async function getComponent() {
     element.innerHTML = _.join(['Hello', 'Webpack--'], '');
     console.log(common, 'cc');
     print();
+
+    const arr = [1, 2, 3, 4, 5];
+    const newarr = arr.map(item => ({ label: item, value: item }))
+    console.log(newarr)
     return element;
 
 }
