@@ -2,23 +2,25 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
-    mode: 'development',
-    entry: './src/.sihui/index.js',
+module.exports = (isDev) => ({
+    entry: {
+        app: './src/.sihui/index.js',
+    },
     plugins: [
         new HtmlWebpackPlugin({
-            title: '管理输出'
+            title: 'Production',
         }),
         new MiniCssExtractPlugin({ // 添加插件
             filename: '[name].[hash:8].css'
         }),
     ],
     output: {
-        filename: '[name].[contenthash].js',
-        path: path.resolve(__dirname, 'dist'),
-        clean: true
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, '../../dist'),
+        clean: true,
     },
     optimization: {
+        // usedExports: true,
         // 此处经过测试，不加这个配置也会有同样的效果
         moduleIds: 'deterministic',
         splitChunks: {
@@ -34,15 +36,16 @@ module.exports = {
         },
         runtimeChunk: 'single'
     },
-    devtool: 'inline-source-map',
-    devServer: {
-        static: './dist',
-    },
     module: {
         rules: [
             {
+                test: /\.less$/i,
+                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
+                // include: path.resolve(__dirname, 'src/.sihui')
+            },
+            {
                 test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
                 // include: path.resolve(__dirname, 'src/.sihui')
             },
             {
@@ -55,4 +58,4 @@ module.exports = {
             // }
         ]
     }
-}
+});
