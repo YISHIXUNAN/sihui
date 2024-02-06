@@ -1,23 +1,35 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { entryPath, htmlTemPath, outputPath, jsIncludePath, cssIncludePath } = require('./path.js');
+
+
+
 
 module.exports = (isDev) => ({
     entry: {
-        app: './src/.sihui/index.js',
+        app: entryPath,
     },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Production',
+            template: htmlTemPath,
+            scriptLoading: 'blocking',
         }),
         new MiniCssExtractPlugin({ // 添加插件
             filename: '[name].[hash:8].css'
         }),
     ],
     output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, '../../dist'),
+        filename: '[name].bundle1.js',
+        path: outputPath,
         clean: true,
+    },
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, '../../src'),
+        },
+        extensions: ['.js', '.tsx', '.jsx', '.ts'],
     },
     optimization: {
         // usedExports: true,
@@ -39,7 +51,7 @@ module.exports = (isDev) => ({
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(js|jsx|tsx)$/,
                 use:
                     [{
                         loader: 'babel-loader',
@@ -59,21 +71,22 @@ module.exports = (isDev) => ({
                                             edge: 17
                                         }
                                     }
-                                ]
+                                ],
+                                "@babel/preset-react"
                             ],
-                        }
+                        },
                     }],
-                include: path.resolve(__dirname, 'src/.sihui')
+                include: jsIncludePath
             },
             {
                 test: /\.less$/i,
-                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
-                // include: path.resolve(__dirname, 'src/.sihui')
+                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }, 'postcss-loader', 'less-loader'],
+                include: cssIncludePath
             },
             {
                 test: /\.css$/i,
-                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
-                // include: path.resolve(__dirname, 'src/.sihui')
+                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }],
+                include: cssIncludePath
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
