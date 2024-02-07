@@ -24,7 +24,7 @@ module.exports = (isDev) => ({
         filename: '[name].bundle.js',
         path: outputPath,
         clean: true,
-        // publicPath: "/",
+        publicPath: "/",
     },
     resolve: {
         alias: {

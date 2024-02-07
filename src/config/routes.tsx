@@ -10,16 +10,23 @@ const router = [
     element: <Layout />,
   },
   {
-    path: "/login",
+    path: "login",
+    name: "login",
     element: <Login />,
   },
   {
-    path: "/about",
+    path: "detail",
     element: <Detail />,
   },
   {
-    path: "/home",
+    path: "home",
     element: <Home />,
+    children: [
+      {
+        path: "detail",
+        element: <Detail />,
+      },
+    ],
   },
 ];
 
