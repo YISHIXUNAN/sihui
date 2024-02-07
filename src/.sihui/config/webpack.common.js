@@ -24,10 +24,11 @@ module.exports = (isDev) => ({
         filename: '[name].bundle.js',
         path: outputPath,
         clean: true,
+        // publicPath: "/",
     },
     resolve: {
         alias: {
-            '@/': path.resolve(__dirname, '../../'),
+            '@': path.resolve(__dirname, '../../'),
             '@pages': path.resolve(__dirname, '../../pages'),
             '@sihui': path.resolve(__dirname, '../core')
         },

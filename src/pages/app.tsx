@@ -3,6 +3,11 @@ import style from "./app.less";
 import Home from "@pages/home/index";
 import Detail from "@pages/detail/index";
 import { Button } from "antd";
-import { Link, MemoryRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Link } from "@sihui";
+import routes from "@/config/routes";
 
-export default () => <h1>APP</h1>;
+const router = createBrowserRouter(routes);
+
+export default () => {
+  return <RouterProvider router={router} />;
+};
