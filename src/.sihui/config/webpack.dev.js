@@ -5,7 +5,7 @@ module.exports = merge(common(true), {
     mode: 'development',
     devtool: 'inline-source-map',
     devServer: {
-        static: './dist',
+        static: './dist'
     },
 
 });

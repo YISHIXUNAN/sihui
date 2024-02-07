@@ -14,20 +14,22 @@ module.exports = (isDev) => ({
         new HtmlWebpackPlugin({
             title: 'Production',
             template: htmlTemPath,
-            scriptLoading: 'blocking',
+            scriptLoading: 'blocking'
         }),
         new MiniCssExtractPlugin({ // 添加插件
             filename: '[name].[hash:8].css'
         }),
     ],
     output: {
-        filename: '[name].bundle1.js',
+        filename: '[name].bundle.js',
         path: outputPath,
         clean: true,
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, '../../src'),
+            '@/': path.resolve(__dirname, '../../'),
+            '@pages': path.resolve(__dirname, '../../pages'),
+            '@sihui': path.resolve(__dirname, '../core')
         },
         extensions: ['.js', '.tsx', '.jsx', '.ts'],
     },

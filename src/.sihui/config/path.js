@@ -3,15 +3,19 @@ const path = require('path');
 const curPath = path.resolve(__dirname, '..');
 const getPath = (str) => curPath + str;
 
+const pagePath = path.resolve(__dirname, '../../pages');
+
 const entryPath = getPath('/index.js');
 
 const htmlTemPath = getPath('/index.html');
 
 const outputPath = getPath('/../../dist');
 
-const jsIncludePath = [path.resolve(__dirname, '../index.js'), path.resolve(__dirname, '../../pages')];
+const configPath = path.resolve(__dirname, '../../config');
 
-const cssIncludePath = path.resolve(__dirname, '../../pages');
+const jsIncludePath = [path.resolve(__dirname, '../index.js'), pagePath, configPath];
+
+const cssIncludePath = pagePath;
 
 module.exports = { entryPath, htmlTemPath, outputPath, jsIncludePath, cssIncludePath };
 
