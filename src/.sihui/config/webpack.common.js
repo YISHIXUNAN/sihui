@@ -82,15 +82,30 @@ module.exports = (isDev) => ({
                 include: jsIncludePath
             },
             {
-                test: /\.less$/i,
-                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }, 'postcss-loader', 'less-loader'],
+                oneOf: [
+                    {
+                        test: /\.modules.less$/i,
+                        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }, 'postcss-loader', 'less-loader'],
+                        include: cssIncludePath
+                    },
+                    {
+                        test: /\.modules.css$/i,
+                        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }],
+                        include: cssIncludePath
+                    },
+                    {
+                        test: /\.less$/i,
+                        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
+                        include: cssIncludePath
+                    },
+                    {
+                        test: /\.css$/i,
+                        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
                 include: cssIncludePath
             },
-            {
-                test: /\.css$/i,
-                use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }],
-                include: cssIncludePath
+                ]
             },
+
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: 'asset/resource'
