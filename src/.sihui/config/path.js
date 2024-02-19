@@ -13,7 +13,7 @@ const outputPath = getPath('/../../dist');
 
 const configPath = path.resolve(__dirname, '../../config');
 
-const jsIncludePath = [path.resolve(__dirname, '../index.js'), pagePath, configPath];
+const jsIncludePath = [path.resolve(__dirname, '../'), pagePath, configPath];
 
 const cssIncludePath = pagePath;
 
