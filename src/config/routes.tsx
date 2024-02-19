@@ -1,30 +1,24 @@
-import React from "react";
-import Layout from "@pages/layout";
-import Home from "@pages/home";
-import Login from "@pages/login";
-import Detail from "@pages/detail";
-
 const router = [
   {
     path: "/",
-    element: <Layout />,
+    component: "@pages/layout",
   },
   {
-    path: "login",
+    path: "/login",
     name: "login",
-    element: <Login />,
+    component: "@pages/login",
   },
   {
-    path: "detail",
-    element: <Detail />,
+    path: "/detail",
+    component: "@pages/detail",
   },
   {
-    path: "home",
-    element: <Home />,
+    path: "/home",
+    component: "@pages/home",
     children: [
       {
-        path: "detail",
-        element: <Detail />,
+        path: "/home/detail",
+        component: "@pages/detail",
       },
     ],
   },
