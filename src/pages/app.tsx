@@ -5,7 +5,7 @@ import {
   Link,
   s_createBrowserRouter,
 } from "@sihui";
-import routes from "@/config/routes";
+// import routes from "@/config/routes";
 
 const Home = React.lazy(
   () => import(/* webpackChunkName: "home" */ "@pages/home")

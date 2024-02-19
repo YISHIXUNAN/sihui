@@ -1,5 +1,5 @@
 
-import routes from '@/config/routes';
+// import routes from '@/config/routes';
 import { useNavigate } from 'react-router-dom';
 
 const s_createBrowserRouter = (routes) => {
@@ -17,7 +17,7 @@ const s_createBrowserRouter = (routes) => {
     return s_core_route_map;
 }
 
-const routeMap = s_createBrowserRouter(routes);
+// const routeMap = s_createBrowserRouter(routes);
 
 const sNavigate = (name) => {
     const path = routeMap.get([name]);
