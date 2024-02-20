@@ -50,4 +50,6 @@ const router = [
   },
 ];
 
-export default router1;
+export default router;
+
+// module.exports = router;

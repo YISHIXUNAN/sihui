@@ -17,7 +17,6 @@ const loopRoute = (routes) => {
     return routes?.map(item => {
         const { component } = item;
         const LazyComponent = lazy(component);
-        console.log(item.component)
         return (<Route path={item.path} element={<LazyComponent />} key={item.path}>
             {item?.children?.length !== 0 && loopRoute(item.children) || ''}
         </Route>)
