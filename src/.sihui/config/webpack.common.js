@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { entryPath, htmlTemPath, outputPath, jsIncludePath, cssIncludePath } = require('./path.js');
+const ModuleWebpackPlugin = require('./ModuleWebpackPlugin.js');
+
 
 
 
@@ -19,6 +21,8 @@ module.exports = (isDev) => ({
         new MiniCssExtractPlugin({ // 添加插件
             filename: '[name].[hash:8].css'
         }),
+        new ModuleWebpackPlugin()
+
     ],
     output: {
         filename: '[name].bundle.js',
