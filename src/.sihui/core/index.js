@@ -1,7 +1,11 @@
 
 // import routes from '@/config/routes';
-import React,{ lazy,createElement } from 'react';
+import React, { lazy, createElement } from 'react';
 import { useNavigate, BrowserRouter, Route, Routes } from 'react-router-dom';
+import axios from './axios';
+
+
+
 
 let s_core_route_map = new Map();
 
@@ -22,12 +26,12 @@ const loopRoute = (routes) => {
         </Route>)
     })
 
-        // routes?.forEach(item => {
-        //     if (item.name) s_core_route_map.set([item.name], [item.path]);
-        //     if (item?.children?.length !== 0) loopRoute(item.children)
-        // })
-        // return;
-    }
+    // routes?.forEach(item => {
+    //     if (item.name) s_core_route_map.set([item.name], [item.path]);
+    //     if (item?.children?.length !== 0) loopRoute(item.children)
+    // })
+    // return;
+}
 
 // const routeMap = s_createBrowserRouter(routes);
 
@@ -41,3 +45,5 @@ const sNavigate = (name) => {
 export { RouterProvider, createBrowserRouter, Link, useNavigate, Outlet } from 'react-router-dom';
 
 export { getRoutes, sNavigate };
+
+export { request } from './axios';
