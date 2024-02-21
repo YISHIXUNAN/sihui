@@ -15,7 +15,7 @@ module.exports = {
                 'perf', // 性能优化
                 'test', // 增加测试
                 'revert', // 回退
-                // 'chore',// 琐碎内容
+                'chore',// 琐碎内容
                 'others' // 其他
             ]
         ],
