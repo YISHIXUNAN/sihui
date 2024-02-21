@@ -9,7 +9,7 @@ export default [
         component: () => import('@pages/login')
     },
     {
-        path: '/detail1',
+        path: '/detail',
         component: () => import('@pages/detail')
     },
     {

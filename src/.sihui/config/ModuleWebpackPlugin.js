@@ -13,9 +13,9 @@ class ModuleWebpackPlugin {
         compiler.hooks.environment.tap(pluginName, (compilation) => {
             console.log('webpack APPLY');
             preprocessedRouting(routePath, coreRoutePath);
-            fs.watchFile(routePath, (pre, current) => {
+            fs.watch(routePath, (pre, current) => {
                 console.log('监听');
-                // fs.writeFileSync(coreRoutePath, current, (err) => console.log('err', err))
+                preprocessedRouting(routePath, coreRoutePath);
             });
         });
     }

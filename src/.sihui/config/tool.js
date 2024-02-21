@@ -12,5 +12,10 @@ const preprocessedRouting = (from, to) => {
     fs.writeFileSync(to, newStr, (err) => console.log('err', err));
 };
 
+fs.watchFile('./test.js', (pre, current) => {
+    console.log('监听');
+    // fs.writeFileSync(coreRoutePath, current, (err) => console.log('err', err))
+});
+
 // preprocessedRouting(routePath, '../core/routes.js');
 module.exports = { preprocessedRouting };
