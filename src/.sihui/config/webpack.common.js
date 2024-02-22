@@ -4,13 +4,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { entryPath, htmlTemPath, outputPath, jsIncludePath, cssIncludePath } = require('./path.js');
 const ModuleWebpackPlugin = require('./ModuleWebpackPlugin.js');
 
-
-
-
-
 module.exports = (isDev) => ({
     entry: {
-        app: entryPath,
+        app: entryPath
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -18,17 +14,17 @@ module.exports = (isDev) => ({
             template: htmlTemPath,
             scriptLoading: 'blocking'
         }),
-        new MiniCssExtractPlugin({ // 添加插件
+        new MiniCssExtractPlugin({
+            // 添加插件
             filename: '[name].[hash:8].css'
         }),
-        new ModuleWebpackPlugin()
-
+        new ModuleWebpackPlugin(isDev)
     ],
     output: {
         filename: '[name].bundle.js',
         path: outputPath,
         clean: true,
-        publicPath: "/",
+        publicPath: '/'
     },
     resolve: {
         alias: {
@@ -36,7 +32,7 @@ module.exports = (isDev) => ({
             '@pages': path.resolve(__dirname, '../../pages'),
             '@sihui': path.resolve(__dirname, '../core')
         },
-        extensions: ['.js', '.tsx', '.jsx', '.ts'],
+        extensions: ['.js', '.tsx', '.jsx', '.ts']
     },
     optimization: {
         // usedExports: true,
@@ -50,7 +46,7 @@ module.exports = (isDev) => ({
                     chunks: 'all'
                 }
             },
-            chunks: 'all',
+            chunks: 'all'
             // minSize: 1
         },
         runtimeChunk: 'single'
@@ -59,13 +55,14 @@ module.exports = (isDev) => ({
         rules: [
             {
                 test: /\.(js|jsx|tsx)$/,
-                use:
-                    [{
+                use: [
+                    {
                         loader: 'babel-loader',
                         options: {
                             presets: [
                                 [
-                                    '@babel/preset-env', {
+                                    '@babel/preset-env',
+                                    {
                                         useBuiltIns: 'usage',
                                         // 指定core-js版本
                                         corejs: 3,
@@ -79,42 +76,55 @@ module.exports = (isDev) => ({
                                         }
                                     }
                                 ],
-                                "@babel/preset-react",
-                            ],
-
-                        },
-                    }],
+                                '@babel/preset-react'
+                            ]
+                        }
+                    }
+                ],
                 include: jsIncludePath
             },
             {
                 oneOf: [
                     {
                         test: /\.modules.less$/i,
-                        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }, 'postcss-loader', 'less-loader'],
+                        use: [
+                            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+                            { loader: 'css-loader', options: { modules: true } },
+                            'postcss-loader',
+                            'less-loader'
+                        ],
                         include: cssIncludePath
                     },
                     {
                         test: /\.modules.css$/i,
-                        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { modules: true } }],
+                        use: [
+                            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+                            { loader: 'css-loader', options: { modules: true } }
+                        ],
                         include: cssIncludePath
                     },
                     {
                         test: /\.less$/i,
-                        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
+                        use: [
+                            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+                            'css-loader',
+                            'postcss-loader',
+                            'less-loader'
+                        ],
                         include: cssIncludePath
                     },
                     {
                         test: /\.css$/i,
                         use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
-                include: cssIncludePath
-            },
+                        include: cssIncludePath
+                    }
                 ]
             },
 
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: 'asset/resource'
-            },
+            }
             // {
             //     test: /\.(woff|woff2|eot|ttf|otf)$/i,
             //     type: 'asset/resource'
