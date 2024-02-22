@@ -1,5 +1,5 @@
 // import routes from '@/config/routes';
-import React, { lazy, createElement } from 'react';
+import React, { createElement } from 'react';
 import { useNavigate, BrowserRouter, Route, Routes } from 'react-router-dom';
 import axios from './axios';
 import routes from './routes';
@@ -16,10 +16,10 @@ const getRoutes = () => {
 
 const loopRoute = (routes) => {
     return routes?.map((item) => {
-        const { component } = item;
-        const LazyComponent = lazy(component);
+        const { component, lazy, path } = item;
+        const Element = React.lazy(lazy);
         return (
-            <Route path={item.path} element={<LazyComponent />} key={item.path}>
+            <Route path={path} element={component || <Element />} key={path}>
                 {(item?.children?.length !== 0 && loopRoute(item.children)) || ''}
             </Route>
         );

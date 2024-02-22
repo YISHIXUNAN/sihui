@@ -1,16 +1,16 @@
 export default [
     {
         path: '/',
-        component: '@pages/layout'
+        lazy: '@pages/layout'
     },
     {
         path: '/login',
         name: 'login',
-        component: '@pages/login'
+        lazy: '@pages/login'
     },
     {
         path: '/detail',
-        component: '@pages/detail'
+        lazy: '@pages/detail'
     },
     {
         path: '/home',
@@ -18,7 +18,7 @@ export default [
         children: [
             {
                 path: '/home/detail',
-                component: '@pages/detail'
+                lazy: '@pages/detail'
             }
         ]
     }
