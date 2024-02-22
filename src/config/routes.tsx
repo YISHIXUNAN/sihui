@@ -1,7 +1,7 @@
 export default [
     {
         path: '/',
-        lazy: '@pages/layout'
+        component: '@pages/layout'
     },
     {
         path: '/login',

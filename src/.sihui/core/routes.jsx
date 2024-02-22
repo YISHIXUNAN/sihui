@@ -1,9 +1,10 @@
 import React from "react";
+import Spageslayout from  '@pages/layout';
 import Spageshome from  '@pages/home';
 export default [
     {
         path: '/',
-        lazy:()=>import(/* webpackChunkName:  '@pages_layout' */ '@pages/layout')
+        component:<Spageslayout />
     },
     {
         path: '/login',

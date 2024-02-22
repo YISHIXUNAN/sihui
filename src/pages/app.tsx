@@ -13,10 +13,12 @@ export default () => {
     useEffect(() => {
         axiosTest();
     }, []);
+
+    console.log('app');
     return (
         <Suspense fallback={<div>loading^</div>}>
-            <h1>{data}</h1>
             {getRoutes()}
+            <p>{data}</p>
         </Suspense>
     );
 };

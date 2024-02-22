@@ -14,7 +14,8 @@ const preprocessedRouting = (from, to) => {
         .replace(/component.*(\"|\')/g, (str) => {
             const arr = str.split(':');
             const name = 'S' + arr[1].replace(/(@|\/|\"|\'|\s)/g, '');
-            headStr += `import ${name} from ${arr[1]};\n`;
+            const importStr = `import ${name} from ${arr[1]};\n`;
+            if (headStr.indexOf(importStr) === -1) headStr += importStr;
             return `component:<${name} />`;
         });
 
