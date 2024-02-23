@@ -15,10 +15,5 @@ export default () => {
     }, []);
 
     console.log('app');
-    return (
-        <Suspense fallback={<div>loading^</div>}>
-            {getRoutes()}
-            <p>{data}</p>
-        </Suspense>
-    );
+    return <Suspense fallback={<div>loading^</div>}>{getRoutes()}</Suspense>;
 };

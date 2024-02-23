@@ -1,23 +1,23 @@
 import React, { useEffect } from 'react';
 import Home from '@pages/home';
 import { sName } from '@sihui';
-import { SCenter } from '@sihui/components';
+import { SCenter } from '@sihui/component';
 import { Row, Col } from 'antd';
 import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
 
 export default () => {
     // 判断，如果没登陆，就跳转到登录界面，如果登陆了，就跳转到主界面
     const navigate = useNavigate();
-    const login = true;
+    const login = false;
 
     const handleClickEvent = () => {
         navigate(sName('detailPage'));
     };
 
-    // useEffect(() => {
-    //   if (login) navigate("/login");
-    //   else navigate("/home");
-    // }, []);
+    useEffect(() => {
+        if (!login) navigate('/login');
+        else navigate('/home');
+    }, []);
 
     return (
         <>

@@ -76,7 +76,8 @@ module.exports = (isDev) => ({
                                         }
                                     }
                                 ],
-                                '@babel/preset-react'
+                                '@babel/preset-react',
+                                '@babel/preset-typescript'
                             ]
                         }
                     }
