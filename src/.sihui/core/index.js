@@ -18,30 +18,23 @@ const loopRoute = (routes) => {
     return routes?.map((item) => {
         const { component, lazy, path } = item;
         const Element = React.lazy(lazy);
+        if (item.name) s_core_route_map.set(item.name, item.path);
         return (
             <Route path={path} element={component || <Element />} key={path}>
                 {(item?.children?.length !== 0 && loopRoute(item.children)) || ''}
             </Route>
         );
     });
-
-    // routes?.forEach(item => {
-    //     if (item.name) s_core_route_map.set([item.name], [item.path]);
-    //     if (item?.children?.length !== 0) loopRoute(item.children)
-    // })
-    // return;
 };
 
 // const routeMap = s_createBrowserRouter(routes);
 
-const sNavigate = (name) => {
-    const path = routeMap.get([name]);
-    const navigate = useNavigate();
-    navigate(path);
+const sName = (name) => {
+    return s_core_route_map.get(name);
 };
 
 export { RouterProvider, createBrowserRouter, Link, useNavigate, Outlet } from 'react-router-dom';
 
-export { getRoutes, sNavigate };
+export { getRoutes, sName };
 
 export { request } from './axios';

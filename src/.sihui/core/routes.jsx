@@ -4,7 +4,7 @@ import Spageshome from  '@pages/home';
 export default [
     {
         path: '/',
-        component:<Spageslayout />
+        component:<Spageslayout /> // 根路径不允许配置懒加载
     },
     {
         path: '/login',
@@ -12,6 +12,7 @@ export default [
         lazy:()=>import(/* webpackChunkName:  '@pages_login' */ '@pages/login')
     },
     {
+        name: 'detailPage',
         path: '/detail',
         lazy:()=>import(/* webpackChunkName:  '@pages_detail' */ '@pages/detail')
     },

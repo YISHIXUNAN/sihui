@@ -1,7 +1,7 @@
 export default [
     {
         path: '/',
-        component: '@pages/layout'
+        component: '@pages/layout' // 根路径不允许配置懒加载
     },
     {
         path: '/login',
@@ -9,6 +9,7 @@ export default [
         lazy: '@pages/login'
     },
     {
+        name: 'detailPage',
         path: '/detail',
         lazy: '@pages/detail'
     },
