@@ -1,11 +1,11 @@
 import axios from 'axios';
+import proxy from '@/config/proxy';
 
-axios.interceptors.request.use({})
+axios.interceptors.request.use({});
 
 axios.interceptors.response.use({});
 
 class Request {
-
     constructor(params, url) {
         if (params && url) this.post(url, params);
     }
