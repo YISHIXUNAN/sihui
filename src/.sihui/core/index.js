@@ -38,4 +38,4 @@ export { axios };
 
 export { getRoutes, sName };
 
-export { request } from './axios';
+// export { request } from './axios';

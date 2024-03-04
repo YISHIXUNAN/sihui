@@ -2,13 +2,19 @@ import axios from 'axios';
 import proxy from '@/config/proxy';
 import { message } from 'antd';
 
-const { target } = proxy;
+const { target = {} } = proxy;
+
+console.log(target)
+
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTYyMTk3MX0.wpaV5IcNTealpKhsy-fGVJ-p7N5Hc-KJvsyjMs_jSeY'
 
 const reqSuccess = (config) => {
     if (config.method === 'post') {
         config.headers['Content-Type'] = 'application/json';
     }
-    config.headers.authorization = `Bearer ${localStorage.getItem('token')}`;
+    // config.headers.authorization = `Bearer ${localStorage.getItem('token')}`;
+    config.headers.authorization = `Bearer ${token}`;
+
 
     return config;
 };
@@ -18,14 +24,14 @@ const reqFailed = (err) => {
 };
 
 const resSuccess = (res) => {
-    if (response.status !== 200) return Promise.reject(response.data)
-    handleGeneralError(response.data.errno, response.data.errmsg)
+    if (response.status !== 200) return Promise.reject(response?.data)
+    handleGeneralError(response?.data?.errno, response?.data?.errmsg)
     return response
 };
 
 const resFaild = (err) => {
-    handleNetworkError(err.response.status)
-    Promise.reject(err.response)
+    handleNetworkError(err?.response?.status)
+    Promise.reject(err?.response)
 }
 
 const handleNetworkError = (errStatus) => {
@@ -86,15 +92,23 @@ const handleGeneralError = (errno, errmsg) => {
     return true
 }
 
-const defaultInstance = axios.create(target.default);
+let defaultInstance = undefined;
 
-defaultInstance.interceptors.request.use(reqSuccess,reqFailed);
+const addInterceptors = (defaultInstance) => {
+    defaultInstance.interceptors.request.use(reqSuccess,reqFailed);
+    defaultInstance.interceptors.response.use(resSuccess,resFaild);
+}   
 
-defaultInstance.interceptors.response.use(resSuccess,resFaild);
+
 
 const request =  defaultInstance.post;
 
-request.get = defaultInstance.get;
+const baseUrl = target?.default?.baseUrl || '';
+request.get = (url) => {
+    defaultInstance = axios.create({ ...target?.default }) 
+    addInterceptors(defaultInstance);
+    defaultInstance.get();
+}
 request.post = defaultInstance.post;
 request.use = (name) => {
     const axiosInstance = axios.create(target[name]);

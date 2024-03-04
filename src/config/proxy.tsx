@@ -1,7 +1,7 @@
 export default {
     target: {
         default: {
-            baseURL: 'https://some-domain.com/api/',
+            baseURL: 'http://api.uomg.com/api/',
             timeout: 1000,
             headers: { 'X-Custom-Header': 'foobar' }
         },
