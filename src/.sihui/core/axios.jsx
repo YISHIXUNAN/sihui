@@ -122,23 +122,26 @@ for (let key in target) {
     instanceMap.set(key, instance);
 }
 
-const post =  (url,params={},name="default") => {
-    const instance = instanceMap.get(name);
-    return new Promise((resolve,reject) => {
-        instance.post(url, params).then((res) => {
-            if (res?.status === 200) {
-                let { data } = res?.data || {};
-                resolve(data);
-            } else {
-                const { statusText = '数据请求失败' } = res || {};
-                message.error(statusText)
-                // reject(statusText);
-            }
-        }).catch(e => {
-            console.log('e',e)
-            // message.error(e);
+const handleRequest = (method,propsInstance) => {
+    return function (url, params = {}, name = "default") {
+        const instance = propsInstance || instanceMap.get(name);
+        return new Promise((resolve,reject) => {
+            instance[method](url, params).then((res) => {
+                if (res?.status === 200) {
+                    let { data } = res?.data || {};
+                    resolve(data);
+                } else {
+                    const { statusText = '数据请求失败' } = res || {};
+                    message.error(statusText)
+                    // reject(statusText);
+                }
+            }).catch(e => {
+                console.log('e',e)
+                // message.error(e);
+            })
         })
-    })
+    }
+    
 };
 
 const get = (url,params,name="default") => {
@@ -146,12 +149,18 @@ const get = (url,params,name="default") => {
     return instance.get(url, params);
 };
 
-const request = post;
+const request = handleRequest('post');
 
-// request.get = get;
-// request.post = post;
+request.get = handleRequest('get');
+request.post = handleRequest('post');
 
-// request.use = (name) => instanceMap.get(name);
+request.use = (name) => {
+    const instance = instanceMap.get(name);
+    return {
+        get: handleRequest('get', instance),
+        post:handleRequest('post',instance)
+    };
+}
 
 
 export { request };
