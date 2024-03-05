@@ -5,36 +5,12 @@ import './index.less';
 import style from './index.modules.css';
 import axios from 'axios';
 
-const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTYyMTk3MX0.wpaV5IcNTealpKhsy-fGVJ-p7N5Hc-KJvsyjMs_jSeY';
-const instance = axios.create({ baseURL: 'https://callbotapi.uincall.com' });
-instance.interceptors.request.use(
-    (config) => {
-        config.headers['Content-Type'] = 'application/json';
-        config.headers.authorization = `Bearer ${token}`;
-        return config;
-    },
-    () => {}
-);
 export default () => {
     const [data, setData] = useState('');
 
     const axiosTest = async () => {
-        // const { data } = await request.get('comments.163?format=text');
-        // setData(JSON.stringify(data));
-        // const { data } = await request('');
-        // axios({
-        //     method: 'POST',
-        //     url: 'https://callbotapi.uincall.com/rest/v1/kb/list',
-        //     // url: 'http://www.webxml.com.cn/WebServices/WeatherWebService.asmx/getWeatherbyCityName',
-        //     data: {}
-        // }).then(function (res) {
-        //     console.log(res.data);
-        // });
-        // const data = await instance.post('/rest/v1/kb/list');
-        // console.log('data', data);
-        const s = await request('/rest/v1/kb/list');
-        // console.log('s', s);
+        const data = await request('/rest/v1/kb/list');
+        console.log('继续执行', data);
     };
 
     useEffect(() => {

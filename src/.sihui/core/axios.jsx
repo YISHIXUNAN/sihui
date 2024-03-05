@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosError }  from 'axios';
 import proxy from '@/config/proxy';
 import { message } from 'antd';
 
 const { target = {} } = proxy;
-const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTYyMTk3MX0.wpaV5IcNTealpKhsy-fGVJ-p7N5Hc-KJvsyjMs_jSeY';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTcxMzM5OH0.2Fwu88weZqPolR2dh3sAgmZewUvTETvQH00cdkPaEgk'
+
 const reqSuccess = (config) => {
     // 1.请求的调整 2.配置用户标识
     if (config.method === 'post') {
@@ -22,19 +22,38 @@ const reqFailed = (err) => {
 };
 
 const resSuccess = (response) => {
-    console.log('response', response);
-    if (response.status !== 200) return Promise.reject(response?.data)
-    handleGeneralError(response?.data?.errno, response?.data?.errmsg)
     return response
 };
 
 const resFaild = (err) => {
-    handleNetworkError(err?.response?.status)
-    // Promise.reject(err?.response)
+    const errmsg = handleNetworkError(err.response.status)
+    // Promise.reject(err.response)
+    return Promise.reject(new AxiosError(errmsg));
+}
+
+const handleAuthError = (errno) => {
+	const authErrMap = {
+	  '10031': '登录失效，需要重新登录', // token 失效
+	  '10032': '您太久没登录，请重新登录~', // token 过期
+	  '10033': '账户未绑定角色，请联系管理员绑定角色',
+	  '10034': '该用户未注册，请联系管理员注册用户',
+	  '10035': 'code 无法获取对应第三方平台用户',
+	  '10036': '该账户未关联员工，请联系管理员做关联',
+	  '10037': '账号已无效',
+	  '10038': '账号未找到',
+	}
+	
+	if (authErrMap.hasOwnProperty(errno)) {
+		message.error(authErrMap[errno])
+		// 授权错误，登出账户
+		logout()
+		return false
+	}
+
+	return true
 }
 
 const handleNetworkError = (errStatus) => {
-    console.log('errStatus',errStatus)
     let errMessage = '未知错误'
     if (errStatus) {
         switch (errStatus) {
@@ -81,6 +100,7 @@ const handleNetworkError = (errStatus) => {
         errMessage = `无法连接到服务器！`
     }
     message.error(errMessage)
+    return errMessage;
 }
 
 const handleGeneralError = (errno, errmsg) => {
@@ -95,7 +115,6 @@ const handleGeneralError = (errno, errmsg) => {
 const instanceMap = new Map();
 
 for (let key in target) {
-    console.log(target[key],key)
     const instance = axios.create(target[key]);
     // 添加拦截器
     instance.interceptors.request.use(reqSuccess,reqFailed);
@@ -103,11 +122,23 @@ for (let key in target) {
     instanceMap.set(key, instance);
 }
 
-console.log('instanceMap',instanceMap)
-const post = (url,params={},name="default") => {
+const post =  (url,params={},name="default") => {
     const instance = instanceMap.get(name);
-    
-    instance.post(url, params);
+    return new Promise((resolve,reject) => {
+        instance.post(url, params).then((res) => {
+            if (res?.status === 200) {
+                let { data } = res?.data || {};
+                resolve(data);
+            } else {
+                const { statusText = '数据请求失败' } = res || {};
+                message.error(statusText)
+                // reject(statusText);
+            }
+        }).catch(e => {
+            console.log('e',e)
+            // message.error(e);
+        })
+    })
 };
 
 const get = (url,params,name="default") => {
