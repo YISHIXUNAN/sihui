@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Outlet } from '@sihui';
+import { Link, Outlet, request } from '@sihui';
 import { Button } from 'antd';
 import './index.less';
 import style from './index.modules.css';
@@ -7,8 +7,8 @@ import axios from 'axios';
 
 const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTYyMTk3MX0.wpaV5IcNTealpKhsy-fGVJ-p7N5Hc-KJvsyjMs_jSeY';
-
-axios.interceptors.request.use(
+const instance = axios.create({ baseURL: 'https://callbotapi.uincall.com' });
+instance.interceptors.request.use(
     (config) => {
         config.headers['Content-Type'] = 'application/json';
         config.headers.authorization = `Bearer ${token}`;
@@ -23,16 +23,18 @@ export default () => {
         // const { data } = await request.get('comments.163?format=text');
         // setData(JSON.stringify(data));
         // const { data } = await request('');
-        axios({
-            method: 'POST',
-            url: 'https://callbotapi.uincall.com/rest/v1/kb/list',
-            // url: 'http://www.webxml.com.cn/WebServices/WeatherWebService.asmx/getWeatherbyCityName',
-            data: {
-                theCityName: '西安'
-            }
-        }).then(function (res) {
-            console.log(res.data);
-        });
+        // axios({
+        //     method: 'POST',
+        //     url: 'https://callbotapi.uincall.com/rest/v1/kb/list',
+        //     // url: 'http://www.webxml.com.cn/WebServices/WeatherWebService.asmx/getWeatherbyCityName',
+        //     data: {}
+        // }).then(function (res) {
+        //     console.log(res.data);
+        // });
+        // const data = await instance.post('/rest/v1/kb/list');
+        // console.log('data', data);
+        const s = await request('/rest/v1/kb/list');
+        // console.log('s', s);
     };
 
     useEffect(() => {
