@@ -8,7 +8,8 @@ export default () => {
     const [data, setData] = useState('');
 
     const axiosTest = async () => {
-        const data = await request.use('default').post('/rest/v1/kb/list');
+        const sRequest = request as any;
+        const data = await sRequest.use('default').post('/rest/v1/kb/list');
         // const data = await request.post('/rest/v1/kb/list');
         console.log('继续执行', data);
     };
