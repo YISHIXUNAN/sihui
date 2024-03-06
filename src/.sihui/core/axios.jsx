@@ -3,32 +3,59 @@ import proxy from '@/config/proxy';
 import { message } from 'antd';
 
 const { target = {} } = proxy;
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTcxMzM5OH0.2Fwu88weZqPolR2dh3sAgmZewUvTETvQH00cdkPaEgk'
+const cancelMap = new Map();
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTc4MDgxMH0.bOGCSgdhqrMSDdvSbFqS2y2X8JPOtmuOb5MxNf_9Z60'
 
-const reqSuccess = (config) => {
-    // 1.请求的调整 2.配置用户标识
+
+const cancelRequest = (url)=> {
+    cancelMap.get(url)?.abort()
+    cancelMap.delete(url)
+}
+
+const reqHeaderControll = (config) => {
+ // 1.请求的调整 2.配置用户标识
     if (config.method === 'post') {
         config.headers['Content-Type'] = 'application/json';
     }
     // config.headers.authorization = `Bearer ${localStorage.getItem('token')}`;
-    // config.headers.authorization = `Bearer ${token}`;
-
-
+    config.headers.authorization = `Bearer ${token}`;
     return config;
 };
+
+const requestCancelControll = config => {
+    const url = config.url || '';
+    console.log('发起请求了')
+    if (cancelMap.get(url)) {
+       cancelRequest(url);
+    } 
+    const controller = new AbortController();
+    config.signal = controller.signal;
+    cancelMap.set(url, controller);
+    return config;
+}
+// 第一次请求的时候，map 没有值，需要添加一个值
+// 第二次请求的时候， 如果上个 请求还没有结束，或者没有请求成功，就应该结束请求
+
 
 const reqFailed = (err) => {
     return Promise.reject(err);
 };
 
 const resSuccess = (response) => {
+    console.log('请求成功了')
+    const url = response.config.url || ''
+    cancelMap.delete(url)
     return response
 };
 
 const resFaild = (err) => {
-    const errmsg = handleNetworkError(err.response.status)
-    // Promise.reject(err.response)
-    return Promise.reject(new AxiosError(errmsg));
+    // 无任何返回数据暂设为请求取消
+    if (err?.response) {
+        const errmsg = handleNetworkError(err?.response?.status)
+        // Promise.reject(err.response)
+        return Promise.reject(new AxiosError(errmsg));
+    }
+    
 }
 
 const handleAuthError = (errno) => {
@@ -117,7 +144,8 @@ const instanceMap = new Map();
 for (let key in target) {
     const instance = axios.create(target[key]);
     // 添加拦截器
-    instance.interceptors.request.use(reqSuccess,reqFailed);
+    instance.interceptors.request.use(reqHeaderControll, reqFailed);
+    instance.interceptors.request.use(requestCancelControll);
     instance.interceptors.response.use(resSuccess, resFaild);
     instanceMap.set(key, instance);
 }
@@ -127,26 +155,22 @@ const handleRequest = (method,propsInstance) => {
         const instance = propsInstance || instanceMap.get(name);
         return new Promise((resolve,reject) => {
             instance[method](url, params).then((res) => {
+                console.log('typeof res', typeof res);
                 if (res?.status === 200) {
                     let { data } = res?.data || {};
                     resolve(data);
                 } else {
                     const { statusText = '数据请求失败' } = res || {};
-                    message.error(statusText)
+                    console.log(statusText)
+                    // message.error(statusText)
                     // reject(statusText);
                 }
             }).catch(e => {
-                console.log('e',e)
-                // message.error(e);
+                message.error(e.message);
             })
         })
     }
     
-};
-
-const get = (url,params,name="default") => {
-    const instance = instanceMap.get(name);
-    return instance.get(url, params);
 };
 
 const request = handleRequest('post');

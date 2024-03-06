@@ -14,13 +14,12 @@ export default () => {
         console.log('继续执行', data);
     };
 
-    useEffect(() => {
-        axiosTest();
-    }, []);
     return (
         <div className="hello">
             HOME
-            <Button type="primary">ANTD</Button>
+            <Button type="primary" onClick={axiosTest}>
+                点击发起请求
+            </Button>
             <div className={style.csstest}>css测试</div>
             {data}
         </div>
