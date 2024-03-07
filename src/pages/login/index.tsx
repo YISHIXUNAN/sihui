@@ -19,10 +19,10 @@ export default () => {
 
     return (
         <div className="loginContainer">
-            <SCenter style={{ height: '60vh' }}>
+            <SCenter style={{ height: '80vh' }}>
                 <div>
                     <div style={{ textAlign: 'center' }}>
-                        <img src={logo}></img>
+                        <img src={logo} width={160}></img>
                     </div>
                     <br />
                     <br />
@@ -42,7 +42,7 @@ export default () => {
                                 rules={[{ required: true, message: 'Please input your username!' }]}
                                 style={{ width: 300 }}
                             >
-                                <Input />
+                                <Input placeholder="请输入用户名" />
                             </Form.Item>
 
                             <Form.Item
@@ -50,7 +50,7 @@ export default () => {
                                 rules={[{ required: true, message: 'Please input your password!' }]}
                                 style={{ width: 300 }}
                             >
-                                <Input.Password />
+                                <Input.Password placeholder="请输入用密码" />
                             </Form.Item>
 
                             <Form.Item
@@ -58,12 +58,16 @@ export default () => {
                                 valuePropName="checked"
                                 wrapperCol={{ offset: 0, span: 16 }}
                             >
-                                <Checkbox>Remember me</Checkbox>
+                                <Checkbox>保持登录</Checkbox>
                             </Form.Item>
 
-                            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                <Button type="primary" htmlType="submit">
-                                    Submit
+                            <Form.Item wrapperCol={{ offset: 0, span: 24 }}>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    style={{ width: 300, borderRadius: 25 }}
+                                >
+                                    登录
                                 </Button>
                             </Form.Item>
                         </Form>
