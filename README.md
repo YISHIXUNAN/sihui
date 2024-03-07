@@ -13,3 +13,6 @@ https://juejin.cn/post/6844904005991137287
 
 axios 官网
 http://www.axios-js.com/zh-cn/docs/#axios-create-config
+
+公共api接口
+https://api.uomg.com/

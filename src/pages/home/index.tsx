@@ -9,8 +9,9 @@ export default () => {
 
     const axiosTest = async () => {
         const sRequest = request as any;
-        const data = await sRequest.use('default').post('/rest/v1/kb/list');
+        const data = await sRequest.post('/rand.qinghua?format=json');
         // const data = await request.post('/rest/v1/kb/list');
+
         console.log('继续执行', data);
     };
 

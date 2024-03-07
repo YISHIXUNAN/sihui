@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-r
 export default () => {
     // 判断，如果没登陆，就跳转到登录界面，如果登陆了，就跳转到主界面
     const navigate = useNavigate();
-    const login = true;
+    const login = false;
 
     const handleClickEvent = () => {
         navigate(sName('detailPage'));

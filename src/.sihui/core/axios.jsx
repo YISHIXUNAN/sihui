@@ -18,7 +18,7 @@ const reqHeaderControll = (config) => {
         config.headers['Content-Type'] = 'application/json';
     }
     // config.headers.authorization = `Bearer ${localStorage.getItem('token')}`;
-    config.headers.authorization = `Bearer ${token}`;
+    // config.headers.authorization = `Bearer ${token}`;
     return config;
 };
 
