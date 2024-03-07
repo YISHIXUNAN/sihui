@@ -1,28 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Outlet, request } from '@sihui';
-import { Button } from 'antd';
-import './index.less';
-import style from './index.modules.css';
+import React, { useState } from 'react';
+import {
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    UploadOutlined,
+    UserOutlined,
+    VideoCameraOutlined
+} from '@ant-design/icons';
+import { Layout, Menu, Button, theme } from 'antd';
 
-export default () => {
-    const [data, setData] = useState('');
+const { Header, Sider, Content } = Layout;
 
-    const axiosTest = async () => {
-        const sRequest = request as any;
-        const data = await sRequest.post('/rand.qinghua?format=json');
-        // const data = await request.post('/rest/v1/kb/list');
-
-        console.log('继续执行', data);
-    };
+const App: React.FC = () => {
+    const [collapsed, setCollapsed] = useState(false);
+    const {
+        token: { colorBgContainer, borderRadiusLG }
+    } = theme.useToken();
 
     return (
-        <div className="hello">
-            HOME
-            <Button type="primary" onClick={axiosTest}>
-                点击发起请求
-            </Button>
-            <div className={style.csstest}>css测试</div>
-            {data}
-        </div>
+        <Layout style={{ height: '100vh' }}>
+            <Sider trigger={null} collapsible collapsed={collapsed}>
+                <div className="demo-logo-vertical" />
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    defaultSelectedKeys={['1']}
+                    items={[
+                        {
+                            key: '1',
+                            icon: <UserOutlined />,
+                            label: 'nav 1'
+                        },
+                        {
+                            key: '2',
+                            icon: <VideoCameraOutlined />,
+                            label: 'nav 2'
+                        },
+                        {
+                            key: '3',
+                            icon: <UploadOutlined />,
+                            label: 'nav 3'
+                        }
+                    ]}
+                />
+            </Sider>
+            <Layout>
+                <Header style={{ padding: 0, background: colorBgContainer }}>
+                    <Button
+                        type="text"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={() => setCollapsed(!collapsed)}
+                        style={{
+                            fontSize: '16px',
+                            width: 64,
+                            height: 64
+                        }}
+                    />
+                </Header>
+                <Content
+                    style={{
+                        margin: '24px 16px',
+                        padding: 24,
+                        minHeight: 280,
+                        background: colorBgContainer,
+                        borderRadius: borderRadiusLG
+                    }}
+                >
+                    Content
+                </Content>
+            </Layout>
+        </Layout>
     );
 };
+
+export default App;
