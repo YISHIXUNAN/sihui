@@ -7,6 +7,7 @@ import { useNavigate, Outlet, uid, useLocation } from '@sihui';
 const { Header, Content, Sider } = Layout;
 
 const pathKeyMap = new Map();
+const keyNameMap = new Map();
 
 const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
     return item.reduce((pre, cur) => {
@@ -20,6 +21,8 @@ const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
             const arr = pathKeyMap.get(path) || [key];
             if (parentKey) arr.push(parentKey);
             pathKeyMap.set(path, arr);
+            pathKeyMap.set(key, path);
+            keyNameMap.set(key, title);
             const newarr = [
                 ...pre,
                 {
@@ -55,6 +58,7 @@ const App: React.FC = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const defaultKeys = pathname === '/' ? pathKeyMap.get(firstItems) : pathKeyMap.get(pathname);
+    const [navigatePath, setNavigatePath] = useState<Array<any>>([]);
 
     const onMenuClick = ({ key = '' }) => {
         const arr = key.split('&');
@@ -66,6 +70,14 @@ const App: React.FC = () => {
             navigate(firstItems);
         }
     }, []);
+
+    useEffect(() => {
+        const arr = pathKeyMap.get(pathname);
+        const newArr = arr.map((item: any) => ({
+            title: keyNameMap.get(item)
+        }));
+        setNavigatePath(newArr);
+    }, [pathname]);
 
     return (
         <Layout style={{ height: '100vh' }}>
@@ -85,9 +97,9 @@ const App: React.FC = () => {
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
                     <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>
+                        {navigatePath?.map((item) => (
+                            <Breadcrumb.Item key={item}>{item.title}</Breadcrumb.Item>
+                        ))}
                     </Breadcrumb>
                     <Content
                         style={{
