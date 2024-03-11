@@ -16,7 +16,7 @@ export default [
                 title: 'page2',
                 path: '/page2',
                 icon: NotificationOutlined,
-                component: '@pages/page2',
+                // component: '@pages/page2',
                 children: [
                     {
                         title: 'page2_1',

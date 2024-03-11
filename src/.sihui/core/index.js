@@ -1,6 +1,6 @@
 // import routes from '@/config/routes';
 import React, { createElement } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom';
 import { v4 as uid } from 'uuid';
 import routes from './routes';
 
@@ -17,10 +17,11 @@ const getRoutes = () => {
 const loopRoute = (routes) => {
     return routes?.map((item) => {
         const { component, lazy, path } = item;
-        const Element = React.lazy(lazy);
+        const Element = lazy && React.lazy(lazy);
+        let showElement = component ? component : lazy ? <Element /> : <Outlet />;
         if (item.name) s_core_route_map.set(item.name, item.path);
         return (
-            <Route path={path} element={component || <Element />} key={path}>
+            <Route path={path} element={showElement} key={path}>
                 {(item?.children?.length !== 0 && loopRoute(item.children)) || ''}
             </Route>
         );

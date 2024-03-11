@@ -19,7 +19,7 @@ export default [
                 title: 'page2',
                 path: '/page2',
                 icon: NotificationOutlined,
-                component:<Spagespage2 />,
+                // component:<Spagespage2 />,
                 children: [
                     {
                         title: 'page2_1',

@@ -41,6 +41,7 @@ const App: React.FC = () => {
     const navigate = useNavigate();
 
     const onMenuClick = ({ key = '' }) => {
+        console.log('触发点击事件');
         const arr = key.split('&');
         navigate(arr[1]);
     };
