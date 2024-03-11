@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Home from '@pages/home';
 import { sName } from '@sihui';
 import { SCenter } from '@sihui/component';
+
 import { Row, Col } from 'antd';
 import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
 

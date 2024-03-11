@@ -7,6 +7,7 @@ import {
     VideoCameraOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
+import { useStates, useStore } from '@/hooks';
 
 const { Header, Sider, Content } = Layout;
 
@@ -15,6 +16,23 @@ const App: React.FC = () => {
     const {
         token: { colorBgContainer, borderRadiusLG }
     } = theme.useToken();
+
+    const [state, setStates] = useStates({ name: 'S', age: 12 });
+
+    const { common } = useStore();
+
+    const onClick = () => {
+        setStates(
+            {
+                age: state.age + 10
+            },
+            (state: any) => {
+                setStates({
+                    age: state.age * 10
+                });
+            }
+        );
+    };
 
     return (
         <Layout style={{ height: '100vh' }}>
@@ -65,7 +83,9 @@ const App: React.FC = () => {
                         borderRadius: borderRadiusLG
                     }}
                 >
-                    Content
+                    {JSON.stringify(state)}
+                    <Button onClick={onClick}>点击</Button>
+                    {common.state}
                 </Content>
             </Layout>
         </Layout>

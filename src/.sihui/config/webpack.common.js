@@ -54,7 +54,7 @@ module.exports = (isDev) => ({
     module: {
         rules: [
             {
-                test: /\.(js|jsx|tsx)$/,
+                test: /\.(js|jsx|tsx|ts)$/,
                 use: [
                     {
                         loader: 'babel-loader',
