@@ -1,44 +1,87 @@
-import React, { useEffect } from 'react';
-import Home from '@pages/home';
-import { sName } from '@sihui';
-import { SCenter } from '@sihui/component';
+import React from 'react';
+import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import routes from '@/config/routes';
+import { useNavigate, Outlet, uid } from '@sihui';
 
-import { Row, Col } from 'antd';
-import { BrowserRouter, Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
+const { Header, Content, Sider } = Layout;
 
-export default () => {
-    // 判断，如果没登陆，就跳转到登录界面，如果登陆了，就跳转到主界面
+const getMenuItem: any = (item: Array<any>) => {
+    return item.reduce((pre, cur) => {
+        const { hidden = false } = cur;
+        if (hidden) return pre;
+        const { title, icon, path, children = [] } = cur;
+        if (path === '/') {
+            return children && children.length !== 0 && getMenuItem(children);
+        } else {
+            const newarr = [
+                ...pre,
+                {
+                    key: `${uid()}&${path}`,
+                    label: title,
+                    path,
+                    icon: React.createElement(icon as any),
+                    children: children && children.length !== 0 && getMenuItem(children)
+                }
+            ];
+            return newarr;
+        }
+    }, []);
+};
+
+const menuItems: MenuProps['items'] = getMenuItem(routes);
+
+console.log('menuItems', menuItems);
+
+const App: React.FC = () => {
+    const {
+        token: { colorBgContainer, borderRadiusLG }
+    } = theme.useToken();
     const navigate = useNavigate();
-    const login = false;
 
-    const handleClickEvent = () => {
-        navigate(sName('detailPage'));
+    const onMenuClick = ({ key = '' }) => {
+        const arr = key.split('&');
+        navigate(arr[1]);
     };
 
-    useEffect(() => {
-        if (!login) navigate('/login');
-        else navigate('/home');
-    }, []);
-
     return (
-        <>
-            <SCenter>
-                <div style={{ width: 60, height: 60, backgroundColor: 'bisque' }}></div>
-            </SCenter>
-            {/* <div onClick={handleClickEvent}>点击跳转</div>
-            <Row>
-                <Col span={4}>
-                    <div>
-                        <Link to="/home">home</Link>
-                    </div>
-                    <div>
-                        <Link to="/detail">detail</Link>
-                    </div>
-                </Col>
-                <Col span={20}>
-                    <Outlet />
-                </Col>
-            </Row> */}
-        </>
+        <Layout style={{ height: '100vh' }}>
+            <Header style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="demo-logo" />
+            </Header>
+            <Layout>
+                <Sider width={200} style={{ background: colorBgContainer }}>
+                    <Menu
+                        mode="inline"
+                        defaultSelectedKeys={['1']}
+                        defaultOpenKeys={['sub1']}
+                        style={{ height: '100%', borderRight: 0 }}
+                        items={menuItems}
+                        onClick={onMenuClick}
+                    />
+                </Sider>
+                <Layout style={{ padding: '0 24px 24px' }}>
+                    <Breadcrumb style={{ margin: '16px 0' }}>
+                        <Breadcrumb.Item>Home</Breadcrumb.Item>
+                        <Breadcrumb.Item>List</Breadcrumb.Item>
+                        <Breadcrumb.Item>App</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <Content
+                        style={{
+                            padding: 24,
+                            margin: 0,
+                            minHeight: 280,
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG
+                        }}
+                    >
+                        <Outlet />
+                    </Content>
+                </Layout>
+            </Layout>
+        </Layout>
     );
 };
+
+export default App;

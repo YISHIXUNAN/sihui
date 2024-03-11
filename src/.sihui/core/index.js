@@ -1,7 +1,7 @@
 // import routes from '@/config/routes';
 import React, { createElement } from 'react';
-import { useNavigate, BrowserRouter, Route, Routes } from 'react-router-dom';
-import axios from 'axios';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { v4 as uid } from 'uuid';
 import routes from './routes';
 
 let s_core_route_map = new Map();
@@ -34,7 +34,8 @@ const sName = (name) => {
 };
 
 export { RouterProvider, createBrowserRouter, Link, useNavigate, Outlet } from 'react-router-dom';
-export { axios };
+
+export { uid };
 
 export { getRoutes, sName };
 
