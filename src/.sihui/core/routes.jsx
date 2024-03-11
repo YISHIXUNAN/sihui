@@ -13,7 +13,15 @@ export default [
                 icon: LaptopOutlined,
                 name: 'detailPage',
                 path: '/page1',
-                lazy:()=>import(/* webpackChunkName:  '@pages_page1' */ '@pages/page1')
+                // lazy:()=>import(/* webpackChunkName:  '@pages_page1' */ '@pages/page1')
+                children: [
+                    {
+                        title: 'page1_1',
+                        icon: UserOutlined,
+                        path: '/page1/page1_1',
+                        lazy:()=>import(/* webpackChunkName:  '@pages_page1_page1_1' */ '@pages/page1/page1_1')
+                    }
+                ]
             },
             {
                 title: 'page2',

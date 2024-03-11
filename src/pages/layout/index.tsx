@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import routes from '@/config/routes';
@@ -8,7 +8,7 @@ const { Header, Content, Sider } = Layout;
 
 const pathKeyMap = new Map();
 
-const getMenuItem: any = (item: Array<any>) => {
+const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
     return item.reduce((pre, cur) => {
         const { hidden = false } = cur;
         if (hidden) return pre;
@@ -17,8 +17,9 @@ const getMenuItem: any = (item: Array<any>) => {
             return children && children.length !== 0 && getMenuItem(children);
         } else {
             const key = `${uid()}&${path}`;
-            pathKeyMap.set(key, path);
-            pathKeyMap.set(path, key);
+            const arr = pathKeyMap.get(path) || [key];
+            if (parentKey) arr.push(parentKey);
+            pathKeyMap.set(path, arr);
             const newarr = [
                 ...pre,
                 {
@@ -26,7 +27,7 @@ const getMenuItem: any = (item: Array<any>) => {
                     label: title,
                     path,
                     icon: React.createElement(icon as any),
-                    children: children && children.length !== 0 && getMenuItem(children)
+                    children: children && children.length !== 0 && getMenuItem(children, key)
                 }
             ];
             return newarr;
@@ -35,14 +36,17 @@ const getMenuItem: any = (item: Array<any>) => {
 };
 
 const getFirstKey: any = (item: any) => {
-    if (item.children) return getFirstKey(item.children);
-    return item.key || '';
+    console.log('hereItem', item);
+    if (item.children) {
+        return getFirstKey(item.children[0]);
+    }
+    return item.path;
 };
 
 const menuItems: MenuProps['items'] = getMenuItem(routes);
 const firstItems = getFirstKey(menuItems?.[0] || {});
 
-console.log('menuItems', menuItems);
+console.log('menuItems', menuItems, pathKeyMap, firstItems);
 
 const App: React.FC = () => {
     const {
@@ -50,15 +54,18 @@ const App: React.FC = () => {
     } = theme.useToken();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const [selectedKeys, setKeys] = useState(
-        pathname === '/' ? firstItems : pathKeyMap.get(pathname)
-    );
+    const defaultKeys = pathname === '/' ? pathKeyMap.get(firstItems) : pathKeyMap.get(pathname);
 
     const onMenuClick = ({ key = '' }) => {
         const arr = key.split('&');
         navigate(arr[1]);
-        setKeys(key);
     };
+
+    useEffect(() => {
+        if (pathname === '/') {
+            navigate(firstItems);
+        }
+    }, []);
 
     return (
         <Layout style={{ height: '100vh' }}>
@@ -72,7 +79,8 @@ const App: React.FC = () => {
                         style={{ height: '100%', borderRight: 0 }}
                         items={menuItems}
                         onClick={onMenuClick}
-                        selectedKeys={[selectedKeys]}
+                        defaultSelectedKeys={defaultKeys}
+                        defaultOpenKeys={defaultKeys}
                     />
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
