@@ -34,7 +34,14 @@ const sName = (name) => {
     return s_core_route_map.get(name);
 };
 
-export { RouterProvider, createBrowserRouter, Link, useNavigate, Outlet } from 'react-router-dom';
+export {
+    RouterProvider,
+    createBrowserRouter,
+    Link,
+    useNavigate,
+    Outlet,
+    useLocation
+} from 'react-router-dom';
 
 export { uid };
 

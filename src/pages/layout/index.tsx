@@ -1,11 +1,12 @@
-import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import routes from '@/config/routes';
-import { useNavigate, Outlet, uid } from '@sihui';
+import { useNavigate, Outlet, uid, useLocation } from '@sihui';
 
 const { Header, Content, Sider } = Layout;
+
+const pathKeyMap = new Map();
 
 const getMenuItem: any = (item: Array<any>) => {
     return item.reduce((pre, cur) => {
@@ -15,10 +16,13 @@ const getMenuItem: any = (item: Array<any>) => {
         if (path === '/') {
             return children && children.length !== 0 && getMenuItem(children);
         } else {
+            const key = `${uid()}&${path}`;
+            pathKeyMap.set(key, path);
+            pathKeyMap.set(path, key);
             const newarr = [
                 ...pre,
                 {
-                    key: `${uid()}&${path}`,
+                    key,
                     label: title,
                     path,
                     icon: React.createElement(icon as any),
@@ -30,7 +34,13 @@ const getMenuItem: any = (item: Array<any>) => {
     }, []);
 };
 
+const getFirstKey: any = (item: any) => {
+    if (item.children) return getFirstKey(item.children);
+    return item.key || '';
+};
+
 const menuItems: MenuProps['items'] = getMenuItem(routes);
+const firstItems = getFirstKey(menuItems?.[0] || {});
 
 console.log('menuItems', menuItems);
 
@@ -39,11 +49,15 @@ const App: React.FC = () => {
         token: { colorBgContainer, borderRadiusLG }
     } = theme.useToken();
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const [selectedKeys, setKeys] = useState(
+        pathname === '/' ? firstItems : pathKeyMap.get(pathname)
+    );
 
     const onMenuClick = ({ key = '' }) => {
-        console.log('触发点击事件');
         const arr = key.split('&');
         navigate(arr[1]);
+        setKeys(key);
     };
 
     return (
@@ -55,11 +69,10 @@ const App: React.FC = () => {
                 <Sider width={200} style={{ background: colorBgContainer }}>
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
                         style={{ height: '100%', borderRight: 0 }}
                         items={menuItems}
                         onClick={onMenuClick}
+                        selectedKeys={[selectedKeys]}
                     />
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
