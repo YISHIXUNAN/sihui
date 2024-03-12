@@ -20,6 +20,13 @@ export default [
                         icon: UserOutlined,
                         path: '/page1/page1_1',
                         lazy:()=>import(/* webpackChunkName:  '@pages_page1_page1_1' */ '@pages/page1/page1_1')
+                    },
+                    {
+                        title: 'page1_2',
+                        icon: UserOutlined,
+                        path: '/page1/page1_2',
+                        lazy:()=>import(/* webpackChunkName:  '@pages_page1_page1_2' */ '@pages/page1/page1_2'),
+                        hidden: true
                     }
                 ]
             },

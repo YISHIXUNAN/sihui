@@ -8,21 +8,22 @@ const { Header, Content, Sider } = Layout;
 
 const pathKeyMap = new Map();
 const keyNameMap = new Map();
+const curPathArr: Array<any> = [];
 
 const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
     return item.reduce((pre, cur) => {
-        const { hidden = false } = cur;
-        if (hidden) return pre;
-        const { title, icon, path, children = [] } = cur;
+        const { hidden = false, title, icon, path, children = [] } = cur;
         if (path === '/') {
             return children && children.length !== 0 && getMenuItem(children);
         } else {
             const key = `${uid()}&${path}`;
             const arr = pathKeyMap.get(path) || [key];
             if (parentKey) arr.push(parentKey);
-            pathKeyMap.set(path, arr);
-            pathKeyMap.set(key, path);
-            keyNameMap.set(key, title);
+            keyNameMap.set(key, title); // 把侧边栏导航中的 key 和 title 对应
+            pathKeyMap.set(path, arr); // 获取当前目录的 key 路径
+            // 如果 hidden ，说明当前路由是从某个侧边栏路由导航进来的，怎么 获取它的路径呢？
+            // 两个路由平级，A页面跳转到B页面，怎么确定 B 页面的上一级页面是 A?
+            if (hidden) return pre;
             const newarr = [
                 ...pre,
                 {
@@ -39,7 +40,7 @@ const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
 };
 
 const getFirstKey: any = (item: any) => {
-    console.log('hereItem', item);
+    curPathArr.push({ path: item.path, title: item.label });
     if (item.children) {
         return getFirstKey(item.children[0]);
     }
@@ -49,8 +50,6 @@ const getFirstKey: any = (item: any) => {
 const menuItems: MenuProps['items'] = getMenuItem(routes);
 const firstItems = getFirstKey(menuItems?.[0] || {});
 
-console.log('menuItems', menuItems, pathKeyMap, firstItems);
-
 const App: React.FC = () => {
     const {
         token: { colorBgContainer, borderRadiusLG }
@@ -58,11 +57,15 @@ const App: React.FC = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const defaultKeys = pathname === '/' ? pathKeyMap.get(firstItems) : pathKeyMap.get(pathname);
-    const [navigatePath, setNavigatePath] = useState<Array<any>>([]);
+    const [navigatePath, setNavigatePath] = useState<Array<any>>(curPathArr);
 
     const onMenuClick = ({ key = '' }) => {
+        navigate(getPathFromKey(key));
+    };
+
+    const getPathFromKey = (key: string) => {
         const arr = key.split('&');
-        navigate(arr[1]);
+        return arr[1];
     };
 
     useEffect(() => {
@@ -73,14 +76,17 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const arr = pathKeyMap.get(pathname);
-        const newArr = arr?.map((item: any) => ({
-            title: keyNameMap.get(item)
-        }));
-        setNavigatePath(newArr);
+        // 如果 arr 有值，说明点击的是侧边导航栏的内容
+        if (arr && arr.length !== 0) {
+            const newArr = arr?.map((item: any) => ({
+                title: keyNameMap.get(item),
+                path: getPathFromKey(item)
+            }));
+            setNavigatePath(newArr);
+        }
     }, [pathname]);
 
-    // 有个问题，有时候收缩的时候会闪
-    console.log('defaultKeys', defaultKeys);
+    console.log('navigatePath', navigatePath, defaultKeys);
 
     return (
         <Layout style={{ height: '100vh' }}>

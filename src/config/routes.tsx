@@ -17,6 +17,13 @@ export default [
                         icon: UserOutlined,
                         path: '/page1/page1_1',
                         lazy: '@pages/page1/page1_1'
+                    },
+                    {
+                        title: 'page1_2',
+                        icon: UserOutlined,
+                        path: '/page1/page1_2',
+                        lazy: '@pages/page1/page1_2',
+                        hidden: true
                     }
                 ]
             },
