@@ -73,11 +73,14 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const arr = pathKeyMap.get(pathname);
-        const newArr = arr.map((item: any) => ({
+        const newArr = arr?.map((item: any) => ({
             title: keyNameMap.get(item)
         }));
         setNavigatePath(newArr);
     }, [pathname]);
+
+    // 有个问题，有时候收缩的时候会闪
+    console.log('defaultKeys', defaultKeys);
 
     return (
         <Layout style={{ height: '100vh' }}>
