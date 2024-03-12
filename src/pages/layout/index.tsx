@@ -10,6 +10,17 @@ const pathKeyMap = new Map();
 const keyNameMap = new Map();
 const curPathArr: Array<any> = [];
 
+const getFullPath = (path: string, key: string) => {
+    const index = path.lastIndexOf('/');
+    const lastPath = path.substring(0, index);
+    if (lastPath && pathKeyMap.get(lastPath)) {
+        const arr = pathKeyMap.get(lastPath);
+        const newArr = [...arr, key];
+        return newArr;
+    }
+    return [key];
+};
+
 const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
     return item.reduce((pre, cur) => {
         const { hidden = false, title, icon, path, children = [] } = cur;
@@ -17,12 +28,9 @@ const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
             return children && children.length !== 0 && getMenuItem(children);
         } else {
             const key = `${uid()}&${path}`;
-            const arr = pathKeyMap.get(path) || [key];
-            if (parentKey) arr.push(parentKey);
+            const arr = getFullPath(path, key);
             keyNameMap.set(key, title); // 把侧边栏导航中的 key 和 title 对应
             pathKeyMap.set(path, arr); // 获取当前目录的 key 路径
-            // 如果 hidden ，说明当前路由是从某个侧边栏路由导航进来的，怎么 获取它的路径呢？
-            // 两个路由平级，A页面跳转到B页面，怎么确定 B 页面的上一级页面是 A?
             if (hidden) return pre;
             const newarr = [
                 ...pre,

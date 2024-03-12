@@ -24,7 +24,7 @@ export default [
                     {
                         title: 'page1_2',
                         icon: UserOutlined,
-                        path: '/page1/page1_2',
+                        path: '/page1/page1_1/page1_2', // 如果有层级关系，需要包含父路径
                         lazy:()=>import(/* webpackChunkName:  '@pages_page1_page1_2' */ '@pages/page1/page1_2'),
                         hidden: true
                     }
