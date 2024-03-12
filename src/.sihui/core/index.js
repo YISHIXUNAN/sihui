@@ -1,9 +1,12 @@
 // import routes from '@/config/routes';
 import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import { v4 as uid } from 'uuid';
 import routes from './routes';
 import { Spin } from 'antd';
+
+const history = createBrowserHistory();
 
 let s_core_route_map = new Map();
 
@@ -63,3 +66,5 @@ export { uid };
 export { getRoutes, sName };
 
 export { request } from './axios';
+
+export { history };

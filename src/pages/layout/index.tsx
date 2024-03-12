@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import routes from '@/config/routes';
-import { useNavigate, Outlet, uid, useLocation } from '@sihui';
+import { useNavigate, Outlet, uid, useLocation, history } from '@sihui';
 
 const { Header, Content, Sider } = Layout;
 
@@ -32,6 +32,7 @@ const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
             keyNameMap.set(key, title); // 把侧边栏导航中的 key 和 title 对应
             pathKeyMap.set(path, arr); // 获取当前目录的 key 路径
             if (hidden) return pre;
+            keyNameMap.set(path, key); // 只存储侧边栏有的路由
             const newarr = [
                 ...pre,
                 {
@@ -65,10 +66,19 @@ const App: React.FC = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const defaultKeys = pathname === '/' ? pathKeyMap.get(firstItems) : pathKeyMap.get(pathname);
+    const [openKeys, setOpenKeys] = useState(defaultKeys);
+    const [selectedKeys, setSelectedKes] = useState(defaultKeys);
     const [navigatePath, setNavigatePath] = useState<Array<any>>(curPathArr);
 
     const onMenuClick = ({ key = '' }) => {
         navigate(getPathFromKey(key));
+    };
+
+    const onBreadClick = (path: string) => {
+        // 如果在面包屑中多级跳转
+        const curLength = pathKeyMap.get(pathname).length;
+        const nextLength = pathKeyMap.get(path).length;
+        history.go(nextLength - curLength);
     };
 
     const getPathFromKey = (key: string) => {
@@ -84,7 +94,8 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const arr = pathKeyMap.get(pathname);
-        // 如果 arr 有值，说明点击的是侧边导航栏的内容
+        setOpenKeys([...openKeys, ...arr]);
+        keyNameMap.get(pathname) && setSelectedKes(keyNameMap.get(pathname));
         if (arr && arr.length !== 0) {
             const newArr = arr?.map((item: any) => ({
                 title: keyNameMap.get(item),
@@ -93,8 +104,6 @@ const App: React.FC = () => {
             setNavigatePath(newArr);
         }
     }, [pathname]);
-
-    console.log('navigatePath', navigatePath, defaultKeys);
 
     return (
         <Layout style={{ height: '100vh' }}>
@@ -108,14 +117,27 @@ const App: React.FC = () => {
                         style={{ height: '100%', borderRight: 0 }}
                         items={menuItems}
                         onClick={onMenuClick}
-                        defaultSelectedKeys={defaultKeys}
-                        defaultOpenKeys={defaultKeys}
+                        onOpenChange={(e) => {
+                            setOpenKeys(e);
+                        }}
+                        selectedKeys={selectedKeys}
+                        openKeys={openKeys}
                     />
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
                     <Breadcrumb style={{ margin: '16px 0' }}>
-                        {navigatePath?.map((item) => (
-                            <Breadcrumb.Item key={item}>{item.title}</Breadcrumb.Item>
+                        {navigatePath?.map((item, index) => (
+                            <Breadcrumb.Item key={index}>
+                                <span
+                                    style={{
+                                        color: index !== 0 ? '#2b83ff' : '',
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={() => onBreadClick(item.path)}
+                                >
+                                    {item.title}
+                                </span>
+                            </Breadcrumb.Item>
                         ))}
                     </Breadcrumb>
                     <Content
