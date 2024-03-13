@@ -62,6 +62,7 @@ export default [
     },
     {
         path: '*',
-        component: '@pages/404'
+        component: '@pages/404',
+        hidden: true
     }
 ];

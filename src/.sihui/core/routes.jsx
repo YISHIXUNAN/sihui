@@ -67,6 +67,7 @@ export default [
     },
     {
         path: '*',
-        component:<Spages404 />
+        component:<Spages404 />,
+        hidden: true
     }
 ];

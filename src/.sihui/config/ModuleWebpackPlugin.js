@@ -14,7 +14,6 @@ class ModuleWebpackPlugin {
                 console.log('Dev', this.isDev);
                 const fs = require('fs');
                 fs.watch(routePath, (pre, current) => {
-                    console.log('监听');
                     preprocessedRouting(routePath, coreRoutePath);
                 });
             }
