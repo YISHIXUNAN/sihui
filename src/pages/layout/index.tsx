@@ -21,7 +21,7 @@ const getFullPath = (path: string, key: string) => {
     return [key];
 };
 
-const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
+const getMenuItem: any = (item: Array<any>) => {
     return item.reduce((pre, cur) => {
         const { hidden = false, title, icon, path, children = [] } = cur;
         if (path === '/') {
@@ -37,10 +37,10 @@ const getMenuItem: any = (item: Array<any>, parentKey: string = '') => {
                 ...pre,
                 {
                     key,
-                    label: title,
+                    label: title || path,
                     path,
-                    icon: React.createElement(icon as any),
-                    children: children && children.length !== 0 && getMenuItem(children, key)
+                    icon: (icon && React.createElement(icon as any)) || null,
+                    children: children && children.length !== 0 && getMenuItem(children)
                 }
             ];
             return newarr;

@@ -51,9 +51,17 @@ export default [
         ]
     },
     {
+        path: '/test',
+        component: '@pages/test'
+    },
+    {
         path: '/login',
         name: 'login',
         lazy: '@pages/login',
         hidden: true
+    },
+    {
+        path: '*',
+        component: '@pages/404'
     }
 ];

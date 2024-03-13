@@ -1,6 +1,8 @@
 import React from "react";
 import Spageslayout from  '@pages/layout';
 import Spagespage2 from  '@pages/page2';
+import Spagestest from  '@pages/test';
+import Spages404 from  '@pages/404';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 
 export default [
@@ -54,9 +56,17 @@ export default [
         ]
     },
     {
+        path: '/test',
+        component:<Spagestest />
+    },
+    {
         path: '/login',
         name: 'login',
         lazy:()=>import(/* webpackChunkName:  '@pages_login' */ '@pages/login'),
         hidden: true
+    },
+    {
+        path: '*',
+        component:<Spages404 />
     }
 ];
