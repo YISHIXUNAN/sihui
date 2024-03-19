@@ -76,8 +76,10 @@ const App: React.FC = () => {
 
     const onBreadClick = (path: string) => {
         // 如果在面包屑中多级跳转
+        // 这个地方有错误，只考虑了一级一级正常跳转到目标界面的情况。跨级页面跳转后无法返回正确的路径
         const curLength = pathKeyMap.get(pathname).length;
         const nextLength = pathKeyMap.get(path).length;
+        console.log('history', history);
         history.go(nextLength - curLength);
     };
 

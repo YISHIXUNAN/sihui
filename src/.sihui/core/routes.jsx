@@ -13,7 +13,7 @@ export default [
             {
                 title: 'page1',
                 icon: LaptopOutlined,
-                name: 'detailPage',
+                name: 'page1',
                 path: '/page1',
                 // lazy:()=>import(/* webpackChunkName:  '@pages_page1' */ '@pages/page1')
                 children: [
@@ -25,6 +25,7 @@ export default [
                     },
                     {
                         title: 'page1_2',
+                        name: 'page1_2',
                         icon: UserOutlined,
                         path: '/page1/page1_1/page1_2', // 如果有层级关系，需要包含父路径
                         lazy:()=>import(/* webpackChunkName:  '@pages_page1_page1_2' */ '@pages/page1/page1_2'),
@@ -40,6 +41,7 @@ export default [
                 children: [
                     {
                         title: 'page2_1',
+                        name: 'page2_1',
                         icon: UserOutlined,
                         path: '/page2/page2_1',
                         lazy:()=>import(/* webpackChunkName:  '@pages_page2_page2_1' */ '@pages/page2/page2_1')
@@ -52,13 +54,14 @@ export default [
                 name: 'detailPage',
                 path: '/page3',
                 lazy:()=>import(/* webpackChunkName:  '@pages_page3' */ '@pages/page3')
+            },
+            {
+                path: '/test',
+                component:<Spagestest />
             }
         ]
     },
-    {
-        path: '/test',
-        component:<Spagestest />
-    },
+
     {
         path: '/login',
         name: 'login',

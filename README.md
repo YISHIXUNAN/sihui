@@ -21,8 +21,6 @@ git相关：.gitignore + commitlint.config.js
 
 ```
 
-
-
 #### 目录结构
 
 
@@ -45,7 +43,177 @@ git相关：.gitignore + commitlint.config.js
 
 #### 路由配置及说明
 
+在 `src/config/proxy` 文件 routes 中配置。
+
+- 注意
+
+>懒加载与非懒加载
+
+懒加载路径前需要指明 lazy, 不需要懒加载可以使用 component
+
+> 子页面路径跳转
+
+如果想让不同页面出现在同一层级，不要将新的页面放在上一集的 children 中，可以放在同一层级中。注意，此时，子路径需要包含父路径。若没有包含，面包屑导航可能会出现未知错误。
+
+>通过路径名跳转
+
+如果某个路径在多个页面中用到，可以使用 name指定该路径的名字。后续可以使用 title 跳转。
+
+```javascript
+import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+
+export default [
+    {
+        path: '/',
+        component: '@pages/layout', // 根路径不允许配置懒加载
+        children: [
+            {
+                title: 'page1',// 路径展示明
+                icon: LaptopOutlined, // 路径icon 配置
+                name: 'detailPage', // 路径名字
+                path: '/page1',
+                children: [
+                    {
+                        title: 'page1_1',
+                        icon: UserOutlined,
+                        path: '/page1/page1_1',
+                        lazy: '@pages/page1/page1_1'
+                    },
+                    {
+                        title: 'page1_2',
+                        icon: UserOutlined,
+                        path: '/page1/page1_1/page1_2', // 如果有层级关系，需要包含父路径
+                        lazy: '@pages/page1/page1_2',
+                        hidden: true
+                    }
+                ]
+            },
+            {
+                title: 'page2',
+                path: '/page2',
+                icon: NotificationOutlined,
+                // component: '@pages/page2',
+                children: [
+                    {
+                        name:'page2_1'
+                        title: 'page2_1',
+                        icon: UserOutlined,
+                        path: '/page2/page2_1',
+                        lazy: '@pages/page2/page2_1'
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        path: '/login',
+        name: 'login',
+        lazy: '@pages/login',
+        hidden: true
+    },
+    {
+        path: '*',
+        component: '@pages/404',
+        hidden: true
+    }
+];
+
+```
+
+使用 name 跳转示例
+
+```js
+import { useNavigate, sName } from '@sihui';
+
+export default () => {
+	// ....
+    const navigate = useNavigate();
+    
+    //...
+    navigate(sName('page2_1'));
+}
+```
+
+
+
+
+
+
+
 #### 请求配置及说明
+>公共请求头配置
+
+在 `src/config/proxy` 文件 `target` 中配置，可配置多个请求头。
+
+```
+export default {
+    target: {
+        default: {
+            baseURL: 'https://api.uomg.com/api',
+            timeout: 1000
+        },
+        name1: {}
+    },
+    before: [
+        (config: any) => {
+            console.log('proxy before');
+            return config;
+        }
+    ],
+    after: [
+        (res: any) => {
+            console.log('proxy after');
+            return res;
+        }
+    ]
+};
+```
+
+> 请求方式
+
+```
+import { request } from '@sihui';// 引入请求头
+
+// ...
+
+// 发起请求
+const sRequest = request as any;
+// 使用自定义 公共请求配置，暂时支持 get、post
+const data = await sRequest.use('default').post('/rand.qinghua?format=json'，{});
+
+// default 可以不使用 use 指定，可以写成如下形式，暂时支持 get、post
+const data = await request.post('/rand.qinghua?format=json'，{});
+
+// 不指定默认发起post请求
+const data = await request('/rand.qinghua?format=json'，{});
+```
+
+> 自定义拦截器可以分别写在 before 数组中 和 after 数组中。注意，before 需要返回 config， res 需要返回 res，否则可能会报错。
+
+```
+export default {
+   //...
+   // 可以做 token 处理
+    before: [
+        (config: any) => {
+            console.log('proxy before');
+            return config;
+        }
+    ],
+    // 请求成功后可以拿到 res， 可以对 res 中的数据进一步处理
+    // 如下，默认 status 200 为请求成功，页面上可以拿到返回数据中的 data， 若改成 300 则会
+    // 报错，且界面上拿不到返回值
+    after: [
+        (res: any) => {
+            console.log('proxy after', res);
+            res.status = 300;
+            console.log('res', res);
+            return res;
+        }
+    ]
+};
+```
 
 #### 状态使用及说明
 

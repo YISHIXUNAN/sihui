@@ -2,7 +2,7 @@ import axios, { AxiosError }  from 'axios';
 import proxy from '@/config/proxy';
 import { message } from 'antd';
 
-const { target = {} } = proxy;
+const { target = {},before,after } = proxy;
 const cancelMap = new Map();
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDdXJyZW50VXNlciI6eyJpZCI6MSwiY29tcGFueV9pZCI6MSwibmFtZSI6IuWFrOWPuDAxIiwiY3JlYXRlZF9hdCI6MTcwNjU4MzEyNywidXBkYXRlZF9hdCI6MTcwNjU4MzEyN30sImV4cCI6MTcwOTc4MDgxMH0.bOGCSgdhqrMSDdvSbFqS2y2X8JPOtmuOb5MxNf_9Z60'
 
@@ -140,13 +140,25 @@ const handleGeneralError = (errno, errmsg) => {
 }
 
 const instanceMap = new Map();
+console.log('before',before)
 
 for (let key in target) {
     const instance = axios.create(target[key]);
     // 添加拦截器
+    if (before && before.length) {
+        before.forEach(item => {
+            instance.interceptors.request.use(item)
+        })
+    };
+   
     instance.interceptors.request.use(reqHeaderControll, reqFailed);
     instance.interceptors.request.use(requestCancelControll);
     instance.interceptors.response.use(resSuccess, resFaild);
+    if (after && after.length) {
+        after.forEach(item => {
+            instance.interceptors.response.use(item);
+        })
+    }
     instanceMap.set(key, instance);
 }
 
@@ -157,12 +169,12 @@ const handleRequest = (method,propsInstance) => {
             instance[method](url, params).then((res) => {
                 console.log('typeof res', typeof res);
                 if (res?.status === 200) {
-                    let { data } = res?.data || {};
+                    let  data  = res?.data || {};
                     resolve(data);
                 } else {
-                    const { statusText = '数据请求失败' } = res || {};
-                    console.log(statusText)
-                    // message.error(statusText)
+                    const { statusText  } = res || {};
+                    console.log(statusText || '数据请求失败')
+                    message.error(statusText || '数据请求失败')
                     // reject(statusText);
                 }
             }).catch(e => {

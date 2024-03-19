@@ -8,7 +8,7 @@ export default [
             {
                 title: 'page1',
                 icon: LaptopOutlined,
-                name: 'detailPage',
+                name: 'page1',
                 path: '/page1',
                 // lazy: '@pages/page1'
                 children: [
@@ -20,6 +20,7 @@ export default [
                     },
                     {
                         title: 'page1_2',
+                        name: 'page1_2',
                         icon: UserOutlined,
                         path: '/page1/page1_1/page1_2', // 如果有层级关系，需要包含父路径
                         lazy: '@pages/page1/page1_2',
@@ -35,6 +36,7 @@ export default [
                 children: [
                     {
                         title: 'page2_1',
+                        name: 'page2_1',
                         icon: UserOutlined,
                         path: '/page2/page2_1',
                         lazy: '@pages/page2/page2_1'
@@ -47,13 +49,14 @@ export default [
                 name: 'detailPage',
                 path: '/page3',
                 lazy: '@pages/page3'
+            },
+            {
+                path: '/test',
+                component: '@pages/test'
             }
         ]
     },
-    {
-        path: '/test',
-        component: '@pages/test'
-    },
+
     {
         path: '/login',
         name: 'login',
