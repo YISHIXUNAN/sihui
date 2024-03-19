@@ -9,7 +9,7 @@ class Common {
     state: string = 'store state';
 
     changeState() {
-        this.state = 'store state changed';
+        this.state += ' changed';
     }
 
     get stateString() {
