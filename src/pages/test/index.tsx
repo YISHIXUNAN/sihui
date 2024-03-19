@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Outlet, request, useNavigate, sName } from '@sihui';
+import { Link, Outlet, request, useNavigate, sName, observer } from '@sihui';
 import { Button } from 'antd';
 import './index.less';
 import { useStore } from '@/hooks';
 import style from './index.modules.css';
-import { observer } from 'mobx-react';
+console.log('observer page');
 
 const Page = () => {
     const [data, setData] = useState('');

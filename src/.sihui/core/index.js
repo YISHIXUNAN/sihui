@@ -1,10 +1,14 @@
 // import routes from '@/config/routes';
+export { observer } from 'mobx-react';
+
 import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { v4 as uid } from 'uuid';
 import routes from './routes';
 import { Spin } from 'antd';
+
+console.log('first');
 
 const history = createBrowserHistory();
 
