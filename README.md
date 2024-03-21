@@ -51,6 +51,10 @@ git相关：.gitignore + commitlint.config.js
 
 懒加载路径前需要指明 lazy, 不需要懒加载可以使用 component
 
+>公共界面配置说明
+
+如果多个界面可跳转至统一界面，则称该界面为公共界面。公共界面需配置在 layout 的 children 中，且需指定 hidden 为 false。如没有按照要求配置，面包屑导航可能会出现错误。
+
 > 子页面路径跳转
 
 如果想让不同页面出现在同一层级，不要将新的页面放在上一集的 children 中，可以放在同一层级中。注意，此时，子路径需要包含父路径。若没有包含，面包屑导航可能会出现未知错误。
@@ -102,7 +106,23 @@ export default [
                         lazy: '@pages/page2/page2_1'
                     }
                 ]
-            }
+            },
+             {
+                title: 'page3',
+                icon: LaptopOutlined,
+                name: 'page3',
+                path: '/page3',
+                lazy: '@pages/page3',
+                hidden: true
+            },
+            {
+                title: 'page3_1',
+                icon: LaptopOutlined,
+                name: 'page3_1',
+                path: '/page3_1',
+                lazy: '@pages/page3/page3_1',
+                hidden: true
+            },
         ]
     },
 
@@ -134,12 +154,6 @@ export default () => {
     navigate(sName('page2_1'));
 }
 ```
-
-
-
-
-
-
 
 #### 请求配置及说明
 >公共请求头配置
@@ -217,7 +231,43 @@ export default {
 
 #### 状态使用及说明
 
+在 `src/store` 文件下可添加多个状态，注意在 `index.js` 中导出。
+
+已封装为 `useStore`, 具体用法参见自定义 hook 说明。
+
 #### 自定义 hooks 及说明
+
+> useStore
+
+从 hooks 导出即可。注意，涉及状态变更的页面需用 observer 包裹。详见 `test/index.tsx` 界面。
+
+```
+import { useStore } from '@/hooks';
+//...
+ const { common } = useStore();
+ 
+ //...
+ <div>store 的值：{common.state}</div>
+```
+
+>useStates
+
+从 hooks 导出即可。支持回调。详见 `test/index.tsx` 界面。
+
+```
+import {  useStates } from '@/hooks';
+//...
+const [state, setState] = useStates({ name: 'ss', age: 10 });
+
+// ...
+setState({ name: 'QQ' }, (newval: any) => {
+            const { name } = newval;
+            setState({ name: name + 'TT' });
+        });
+        
+// ...
+<div>setSate 的值：{state.name}</div>
+```
 
 #### 自定义组件及说明
 

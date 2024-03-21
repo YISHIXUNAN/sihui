@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link, Outlet, request, useNavigate, sName, observer } from '@sihui';
 import { Button } from 'antd';
 import './index.less';
-import { useStore } from '@/hooks';
+import { useStore, useStates } from '@/hooks';
 import style from './index.modules.css';
 console.log('observer page');
 
 const Page = () => {
     const [data, setData] = useState('');
+    const [state, setState] = useStates({ name: 'ss', age: 10 });
     const navigate = useNavigate();
 
     const { common } = useStore();
@@ -23,6 +24,13 @@ const Page = () => {
 
     const handleStoreChange = () => {
         common.changeState();
+    };
+
+    const handleStateChange = () => {
+        setState({ name: 'QQ' }, (newval: any) => {
+            const { name } = newval;
+            setState({ name: name + 'TT' });
+        });
     };
 
     const topage3 = () => {
@@ -41,6 +49,10 @@ const Page = () => {
             <div>store 的值：{common.state}</div>
             <Button type="primary" onClick={handleStoreChange}>
                 点击修改store的值
+            </Button>
+            <div>setSate 的值：{state.name}</div>
+            <Button type="primary" onClick={handleStateChange}>
+                点击修改state的值
             </Button>
         </div>
     );
