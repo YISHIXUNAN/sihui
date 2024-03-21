@@ -46,11 +46,21 @@ export default [
             {
                 title: 'page3',
                 icon: LaptopOutlined,
-                name: 'detailPage',
+                name: 'page3',
                 path: '/page3',
-                lazy: '@pages/page3'
+                lazy: '@pages/page3',
+                hidden: true
             },
             {
+                title: 'page3_1',
+                icon: LaptopOutlined,
+                name: 'page3_1',
+                path: '/page3_1',
+                lazy: '@pages/page3/page3_1',
+                hidden: true
+            },
+            {
+                title: 'test',
                 path: '/test',
                 component: '@pages/test'
             }

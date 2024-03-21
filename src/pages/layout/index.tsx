@@ -7,6 +7,7 @@ import { useNavigate, Outlet, uid, useLocation, history } from '@sihui';
 const { Header, Content, Sider } = Layout;
 
 const pathKeyMap = new Map();
+const pathNameMap = new Map();
 const keyNameMap = new Map();
 const curPathArr: Array<any> = [];
 
@@ -31,6 +32,7 @@ const getMenuItem: any = (item: Array<any>) => {
             const arr = getFullPath(path, key);
             keyNameMap.set(key, title); // 把侧边栏导航中的 key 和 title 对应
             pathKeyMap.set(path, arr); // 获取当前目录的 key 路径
+            pathNameMap.set(path, title);
             if (hidden) return pre;
             keyNameMap.set(path, key); // 只存储侧边栏有的路由
             const newarr = [
@@ -68,19 +70,17 @@ const App: React.FC = () => {
     const defaultKeys = pathname === '/' ? pathKeyMap.get(firstItems) : pathKeyMap.get(pathname);
     const [openKeys, setOpenKeys] = useState(defaultKeys);
     const [selectedKeys, setSelectedKes] = useState(defaultKeys);
-    const [navigatePath, setNavigatePath] = useState<Array<any>>(curPathArr);
+    const [navigatePath, setNavigatePath] = useState<Array<any>>([]);
 
     const onMenuClick = ({ key = '' }) => {
         navigate(getPathFromKey(key));
     };
 
-    const onBreadClick = (path: string) => {
+    const onBreadClick = (path: string, index: number) => {
         // 如果在面包屑中多级跳转
         // 这个地方有错误，只考虑了一级一级正常跳转到目标界面的情况。跨级页面跳转后无法返回正确的路径
-        const curLength = pathKeyMap.get(pathname).length;
-        const nextLength = pathKeyMap.get(path).length;
-        console.log('history', history);
-        history.go(nextLength - curLength);
+        const backNum = index + 1 - navigatePath.length;
+        history.go(backNum);
     };
 
     const getPathFromKey = (key: string) => {
@@ -95,15 +95,37 @@ const App: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const arr = pathKeyMap.get(pathname);
-        setOpenKeys([...openKeys, ...arr]);
-        keyNameMap.get(pathname) && setSelectedKes(keyNameMap.get(pathname));
-        if (arr && arr.length !== 0) {
-            const newArr = arr?.map((item: any) => ({
-                title: keyNameMap.get(item),
-                path: getPathFromKey(item)
-            }));
-            setNavigatePath(newArr);
+        if (pathname !== '/') {
+            console.log('history', history.action);
+            const arr = pathKeyMap.get(pathname);
+            console.log(pathKeyMap, keyNameMap, pathname);
+            setOpenKeys([...openKeys, ...arr]);
+
+            keyNameMap.get(pathname) && setSelectedKes(keyNameMap.get(pathname));
+            if (arr && arr.length !== 0) {
+                // 如果跳转目标路径是公用路径 // 往前跳还是往回跳？
+                if (!keyNameMap.get(pathname) && arr.length == 1) {
+                    let index = -1;
+                    navigatePath.forEach((obj, itemIndex) => {
+                        if (obj.path === pathname) index = itemIndex;
+                    });
+                    console.log('index', index);
+                    if (index >= 0) {
+                        const newarr = navigatePath.filter((item, itemIndex) => itemIndex <= index);
+                        setNavigatePath(newarr);
+                    } else {
+                        const obj = { title: pathNameMap.get(pathname), path: pathname };
+                        const newarr = [...navigatePath, obj];
+                        setNavigatePath(newarr);
+                    }
+                } else {
+                    const newArr = arr?.map((item: any) => ({
+                        title: keyNameMap.get(item),
+                        path: getPathFromKey(item)
+                    }));
+                    setNavigatePath(newArr);
+                }
+            }
         }
     }, [pathname]);
 
@@ -135,7 +157,7 @@ const App: React.FC = () => {
                                         color: index !== 0 ? '#2b83ff' : '',
                                         cursor: 'pointer'
                                     }}
-                                    onClick={() => onBreadClick(item.path)}
+                                    onClick={() => onBreadClick(item.path, index)}
                                 >
                                     {item.title}
                                 </span>

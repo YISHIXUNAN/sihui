@@ -25,8 +25,8 @@ const Page = () => {
         common.changeState();
     };
 
-    const topage2_1 = () => {
-        navigate(sName('page1_2'));
+    const topage3 = () => {
+        navigate(sName('page3'));
     };
 
     return (
@@ -36,7 +36,7 @@ const Page = () => {
             </Button>
             <div>请求结果：{data}</div>
             <div>***********************************</div>
-            <Button onClick={topage2_1}>点击跳转到page1_2</Button>
+            <Button onClick={topage3}>点击跳转到page3</Button>
             <div>***********************************</div>
             <div>store 的值：{common.state}</div>
             <Button type="primary" onClick={handleStoreChange}>
